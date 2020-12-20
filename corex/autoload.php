@@ -5,9 +5,9 @@ session_start();
 $GLOBALS['config'] = array(
     'mysql' => array(
     	'host'      => 'localhost',
-    	'username'  => 'db_username',
-    	'password'  => 'db_user_password',
-    	'database'  => 'database_name',
+    	'username'  => 'root',
+    	'password'  => '',
+    	'database'  => 'developing_corex',
         'charset'   => 'utf8'
     	),
     'remember' => array(
@@ -24,7 +24,12 @@ $GLOBALS['config'] = array(
 // auto load classes files using the class name via apl_autoload_resister
 
 spl_autoload_register(function($class) {
-	require_once 'corex/classes/'.$class.'.php'; 
+	if(file_exists('corex/Classes/'.$class.'.php')){
+        require_once 'corex/Classes/'.$class.'.php';
+    } elseif (file_exists('corex/Controllers/'.$class.'.php')){
+        require_once 'corex/Controllers/'.$class.'.php';
+    }
+    //Research: Check may be the condition above in the else if fliping in if could decrease time complexity
 });
 
 
@@ -38,3 +43,5 @@ if (Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Conf
         $user->login();
     }
 }
+
+require_once 'routes/web_routes.php';

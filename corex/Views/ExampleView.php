@@ -1,0 +1,1 @@
+<h1>Example View of Example Component</h1>
