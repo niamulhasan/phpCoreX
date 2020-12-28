@@ -13,7 +13,6 @@ Route::set('contact-us', function () {
     echo "Contact Us from route function";
 });
 
-
 //built-in Routes
 Route::set('login', function () {
     UserController::createView('Users/LoginView');
@@ -32,4 +31,20 @@ Route::set('signupAction', function () {
 Route::set('user-list', function () {
     //UserListController::CreateView('UserListView');
     UserController::userList();
+});
+
+
+
+//Admin
+Route::set('admin', function () {
+    //UserListController::CreateView('UserListView');
+    AdminController::createView('Admin/MainView');
+});
+Route::set('admin/login', function () {
+    //UserListController::CreateView('UserListView');
+    AdminController::createView('Admin/LoginView');
+});
+
+Route::set('admin/adminLoginAction', function () {
+    AdminController::AdminLoginAction();
 });
