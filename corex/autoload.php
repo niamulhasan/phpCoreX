@@ -8,8 +8,12 @@ $GLOBALS['config'] = array(
     	'username'  => 'root',
     	'password'  => '',
     	'database'  => 'developing_corex',
-        'charset'   => 'utf8'
-    	),
+        'charset'   => 'utf8',
+        ),
+    'app_variables' => array(
+        'app_title' => "phpCoreX",
+        'root_url'   => 'localhost/phpCoreX',
+    ),
     'remember' => array(
     	'cookie_name'   => 'hash',
     	'cookie_expiry' => 604800
