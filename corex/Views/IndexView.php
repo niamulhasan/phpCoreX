@@ -1,24 +1,22 @@
 <h1>Welcome CoreX is Up!</h1>
 
-<?php 
+<?php
 
-    function paramPurse($path = null){
-        if ($path){
-            $path = explode('/', $path);
-            print_r($path);
-
-
-        }
-        else {
-            //echo "Path is null";
-        }
+function paramPurse($path = null)
+{
+    if ($path) {
+        $path = explode('/', $path);
+        print_r($path);
+    } else {
+        //echo "Path is null";
     }
+}
 
-    paramPurse("login/user/password");
+paramPurse("login/user/password");
 
-    print("\n");
+print("<br/>");
 
-    $str = "{user}";
-    if (strpos($str, '{') === 0 && strpos($str, '}') === strlen($str)-1) {
-        print("Boo Yeah");
-     }
+$str = "{user}";
+if (strpos($str, '{') === 0 && strpos($str, '}') === strlen($str) - 1) {
+    print("Boo Yeah");
+}
