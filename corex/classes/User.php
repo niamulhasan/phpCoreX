@@ -1,16 +1,18 @@
 <?php
 
 /**
-* 
-*/
-class User {
+ * 
+ */
+class User
+{
 	private $_db,
-			$_data,
-			$_sessionName,
-			$_cookieName,
-			$_isLoggedIn;
-	
-	function __construct($user = null){
+		$_data,
+		$_sessionName,
+		$_cookieName,
+		$_isLoggedIn;
+
+	function __construct($user = null)
+	{
 		$this->_db = DB::operation();
 
 		$this->_sessionName = Config::get('session/session_name');
@@ -31,7 +33,8 @@ class User {
 		}
 	}
 
-	public function update($fields = array(), $id = null){
+	public function update($fields = array(), $id = null)
+	{
 
 		if (!$id && $this->isLoggedIn()) {
 			$id = $this->data()->id;
@@ -43,14 +46,15 @@ class User {
 	}
 
 
-	public function create($fields=array()){
+	public function create($fields = array())
+	{
 		if (!$this->_db->insert('users', $fields)) {
 			throw new Exception("There was a problem creating an account!");
-			
 		}
 	}
 
-	public function find($user = null){
+	public function find($user = null)
+	{
 		if ($user) {
 			$field = (is_numeric($user)) ? 'id' : 'username';
 			$data = $this->_db->get('users', array($field, '=', $user));
@@ -63,42 +67,44 @@ class User {
 		return false;
 	}
 
-	public function login($username = null, $password = null, $remember = false){
 
-			if (!$username && !$password && $this->exists()) {
-				Session::put($this->_sessionName, $this->data()->id);
-			} else {
+	public function login($username = null, $password = null, $remember = false)
+	{
 
-				$user = $this->find($username);
-				if ($user) {
-					if ($this->data()->password === Hash::generate($password, $this->data()->salt)) {
-						Session::put($this->_sessionName, $this->data()->id);
+		if (!$username && !$password && $this->exists()) {
+			Session::put($this->_sessionName, $this->data()->id);
+		} else {
 
-						if ($remember) {
-							$hash = Hash::unique();
-							$hashCheck = $this->_db->get('users_session', array('user_id', '=', $this->data()->id));
+			$user = $this->find($username);
+			if ($user) {
+				if ($this->data()->password === Hash::generate($password, $this->data()->salt)) {
+					Session::put($this->_sessionName, $this->data()->id);
 
-							if (!$hashCheck->count()) {
-								$this->_db->insert('users_session', array(
-									'user_id' => $this->data()->id,
-									'hash'    => $hash
-								));
-							} else {
-								$hash = $hashCheck->firstResult()->hash;
-							}
+					if ($remember) {
+						$hash = Hash::unique();
+						$hashCheck = $this->_db->get('users_session', array('user_id', '=', $this->data()->id));
 
-							Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-
+						if (!$hashCheck->count()) {
+							$this->_db->insert('users_session', array(
+								'user_id' => $this->data()->id,
+								'hash'    => $hash
+							));
+						} else {
+							$hash = $hashCheck->firstResult()->hash;
 						}
-						return true;
+
+						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
+					return true;
 				}
 			}
+		}
 
 		return false;
 	}
 
-	public function hasPermission($key){
+	public function hasPermission($key)
+	{
 		$group = $this->_db->get('groups', array('id', '=', $this->data()->usrGroup));
 
 		if ($group->count()) {
@@ -108,14 +114,15 @@ class User {
 			}
 		}
 		return false;
-
 	}
 
-	public function exists(){
+	public function exists()
+	{
 		return (!empty($this->_data)) ? true : false;
 	}
 
-	public function logout(){
+	public function logout()
+	{
 
 		$this->_db->delete('users_session', array('user_id', '=', $this->data()->id));
 
@@ -123,11 +130,20 @@ class User {
 		Cookie::delete($this->_cookieName);
 	}
 
-	public function data(){
+	public function data()
+	{
 		return $this->_data;
 	}
 
-	public function isLoggedIn(){
+	public function isLoggedIn()
+	{
 		return $this->_isLoggedIn;
+	}
+
+	public static function getUserData($id)
+	{
+		$userData = DB::operation()->query('SELECT id, username, name, joined, usrGroup FROM users WHERE id = ?', array($id))->results();
+
+		return $userData;
 	}
 }
