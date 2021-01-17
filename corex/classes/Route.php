@@ -49,7 +49,7 @@ class Route
                         $ifFullMatch = true;
                     }
                 } else {
-                    $params[$route_part] = $path_array[$index];
+                    $params[ltrim($route_part, "$")] = $path_array[$index];
                 }
             }
         }
