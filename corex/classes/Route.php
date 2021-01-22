@@ -46,7 +46,11 @@ class Route
             foreach ($route_array as $index => $route_part) {
                 if (!(Functions::startsWith($route_part, "$"))) {
                     if ($route_part == $path_array[$index]) {
+                        //echo "<br/>" . $route_part . " - " . $path_array[$index] . "</br>";
                         $ifFullMatch = true;
+                    } else {
+                        $ifFullMatch = false;
+                        break;
                     }
                 } else {
                     $params[ltrim($route_part, "$")] = $path_array[$index];
